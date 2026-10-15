@@ -19,5 +19,8 @@
     "@types/ws": "^8.18.1",
     "tsx": "^4.20.3",
     "vitest": "^3.2.3"
+  },
+  "exports": {
+    "./room": "./src/room.ts"
   }
 }

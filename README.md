@@ -42,6 +42,31 @@ Vite proxy (the ws server itself stays on plain http behind it). The QR code the
 
 Cabinet keys drive the left half (A/D/S) or right half (J/L/K) directly and make that half's bot stand down for 15 s.
 
+## Deploying to Cloudflare
+
+The site is on Cloudflare Pages; the match server runs as a separate Worker with one Durable Object
+(`apps/worker`, deployed as `koth-server`). Phones connect to `wss://<site>/ws`, and `functions/ws.ts`
+hands that connection to the Worker through the `GAME` service binding in the root `wrangler.toml`.
+
+```
+browser ──/ws──▶ Pages Function (functions/ws.ts) ──GAME binding──▶ koth-server Worker ──▶ GameRoom Durable Object
+```
+
+1. Deploy the Worker once (and again whenever server code changes):
+
+   ```bash
+   npx --prefix apps/worker wrangler login
+   pnpm deploy:server
+   ```
+
+2. Push to GitHub. Pages picks up the `GAME` binding from `wrangler.toml` on the next build.
+   The service must exist first: a Pages build that runs before step 1 serves `/ws` as 503.
+
+- Worker logs: `npx --prefix apps/worker wrangler tail koth-server` (shows `cabinet connected`, `controller joined: …`).
+- Test the whole Cloudflare path locally: `pnpm --filter @koth/worker dev` in one terminal, then
+  `pnpm build && npx --prefix apps/worker wrangler pages dev apps/web/dist` in another.
+- Match state is in memory, as locally: it resets when the Durable Object is evicted after everyone leaves.
+
 ## Checks
 
 ```bash
@@ -56,7 +81,10 @@ the ball crosses the centre at least once per rally on average, and it never pas
 ## Layout
 
 ```
-apps/server/src     index.ts (ws wiring) · reducer.ts (pure state machine) · protocol.ts (zod) · reducer.test.ts
+apps/server/src     index.ts (Node ws wiring) · room.ts (match wiring, transport-agnostic) · reducer.ts (pure state machine)
+                    · protocol.ts (zod) · reducer.test.ts
+apps/worker/src     index.ts (Cloudflare Worker + GameRoom Durable Object, runs room.ts)
+functions/ws.ts     Pages Function: forwards /ws to the Worker
 apps/web/src
   physics/          constants · geometry · buildHalf · buildDivider · table (one Matter.js world) · botBrain · render · attract
   composables/      useSocket · usePinballWorld · useBotController · useHazards

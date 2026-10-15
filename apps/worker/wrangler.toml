@@ -1,0 +1,16 @@
+# The match server on Cloudflare: one Durable Object holds the whole match and every WebSocket.
+# The Pages site reaches it through functions/ws.ts (service binding "GAME" in the root wrangler.toml).
+name = "koth-server"
+main = "src/index.ts"
+compatibility_date = "2026-10-01"
+
+[[durable_objects.bindings]]
+name = "ROOM"
+class_name = "GameRoom"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["GameRoom"]
+
+[observability]
+enabled = true

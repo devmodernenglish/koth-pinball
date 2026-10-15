@@ -1,0 +1,9 @@
+# Cloudflare Pages config. The build runs at the repo root, but the web app builds into apps/web/dist.
+name = "koth-pinball"
+pages_build_output_dir = "apps/web/dist"
+compatibility_date = "2026-10-01"
+
+# functions/ws.ts forwards /ws to the match server Worker (apps/worker, deployed as "koth-server").
+[[services]]
+binding = "GAME"
+service = "koth-server"

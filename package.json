@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "concurrently -k -n server,web -c magenta,cyan \"pnpm --filter @koth/server dev\" \"pnpm --filter @koth/web dev\"",
     "cert": "node scripts/cert.mjs",
+    "deploy:server": "pnpm --filter @koth/worker deploy",
     "build": "pnpm --filter @koth/web build",
     "lint": "eslint . && node scripts/check-styles.mjs",
     "typecheck": "pnpm -r typecheck",
