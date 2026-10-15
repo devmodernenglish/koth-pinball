@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
+import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import {
   HAZARD_COST,
   HAZARD_LABELS,
@@ -8,18 +8,18 @@ import {
   type HazardKind,
   type InputSide,
   type SlotIndex,
-} from '@koth/shared';
-import { useGameStore } from '@/stores/game';
-import { useSocket } from '@/composables/useSocket';
-import JoinForm from '../molecules/JoinForm.vue';
-import FlipperPad from '../molecules/FlipperPad.vue';
-import HazardPicker, { type HazardOption, type HazardTarget } from '../molecules/HazardPicker.vue';
-import PointsChip from '../atoms/PointsChip.vue';
-import ScoreDigit from '../atoms/ScoreDigit.vue';
-import StatusBadge from '../atoms/StatusBadge.vue';
-import BaseButton from '../atoms/BaseButton.vue';
+} from "@koth/shared";
+import { useGameStore } from "@/stores/game";
+import { useSocket } from "@/composables/useSocket";
+import JoinForm from "../molecules/JoinForm.vue";
+import FlipperPad from "../molecules/FlipperPad.vue";
+import HazardPicker, { type HazardOption, type HazardTarget } from "../molecules/HazardPicker.vue";
+import PointsChip from "../atoms/PointsChip.vue";
+import ScoreDigit from "../atoms/ScoreDigit.vue";
+import StatusBadge from "../atoms/StatusBadge.vue";
+import BaseButton from "../atoms/BaseButton.vue";
 
-const NAME_KEY = 'koth:name';
+const NAME_KEY = "koth:name";
 const TOAST_MS = 3000;
 
 const store = useGameStore();
@@ -27,9 +27,9 @@ const socket = useSocket();
 
 function readName(): string {
   try {
-    return localStorage.getItem(NAME_KEY) ?? '';
+    return localStorage.getItem(NAME_KEY) ?? "";
   } catch {
-    return '';
+    return "";
   }
 }
 
@@ -43,7 +43,7 @@ function join(name: string): void {
     // storage is a convenience only
   }
   joined.value = true;
-  socket.connect({ type: 'hello', role: 'controller', name });
+  socket.connect({ type: "hello", role: "controller", name });
 }
 
 function leave(): void {
@@ -52,8 +52,8 @@ function leave(): void {
 }
 
 const mySlot = computed(() => store.mySlot);
-const team = computed(() => (mySlot.value === 1 ? 'b' : 'a'));
-const mySlotState = computed(() => (mySlot.value === null ? null : store.game?.slots[mySlot.value] ?? null));
+const team = computed(() => (mySlot.value === 1 ? "b" : "a"));
+const mySlotState = computed(() => (mySlot.value === null ? null : (store.game?.slots[mySlot.value] ?? null)));
 
 // Input: touch pads and keyboard both funnel into one sender (FR-P2).
 const pressed = ref<Record<InputSide, boolean>>({ left: false, right: false, plunger: false });
@@ -61,11 +61,11 @@ const pressed = ref<Record<InputSide, boolean>>({ left: false, right: false, plu
 function sendInput(side: InputSide, isPressed: boolean): void {
   if (pressed.value[side] === isPressed) return;
   pressed.value = { ...pressed.value, [side]: isPressed };
-  socket.send({ type: 'input', side, pressed: isPressed });
-  if (isPressed && side !== 'plunger') navigator.vibrate?.(12);
+  socket.send({ type: "input", side, pressed: isPressed });
+  if (isPressed && side !== "plunger") navigator.vibrate?.(12);
 }
 
-const KEY_SIDES: Record<string, InputSide> = { z: 'left', '/': 'right', ' ': 'plunger' };
+const KEY_SIDES: Record<string, InputSide> = { z: "left", "/": "right", " ": "plunger" };
 
 function onKey(event: KeyboardEvent, isPressed: boolean): void {
   if (mySlot.value === null || event.target instanceof HTMLInputElement) return;
@@ -102,7 +102,7 @@ const hazardTargets = computed<HazardTarget[]>(() =>
 );
 
 function fireHazard(kind: HazardKind, target: SlotIndex): void {
-  socket.send({ type: 'hazard', kind, target });
+  socket.send({ type: "hazard", kind, target });
 }
 
 // Error toasts.
@@ -115,14 +115,14 @@ watch(toast, (t) => {
 });
 
 onMounted(() => {
-  window.addEventListener('keydown', keyDown);
-  window.addEventListener('keyup', keyUp);
+  window.addEventListener("keydown", keyDown);
+  window.addEventListener("keyup", keyUp);
   clock = setInterval(() => (now.value = Date.now()), 250);
 });
 
 onBeforeUnmount(() => {
-  window.removeEventListener('keydown', keyDown);
-  window.removeEventListener('keyup', keyUp);
+  window.removeEventListener("keydown", keyDown);
+  window.removeEventListener("keyup", keyUp);
   if (clock) clearInterval(clock);
   if (toastTimer) clearTimeout(toastTimer);
 });
@@ -295,7 +295,8 @@ onBeforeUnmount(() => {
     padding: spacing(sm) spacing(lg);
     border-radius: radius(pill);
     background: color(danger);
-    color: color('white');
+    // color: color('white');
+    color: white;
     font-weight: 800;
     text-align: center;
   }
