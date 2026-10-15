@@ -1,0 +1,40 @@
+@use 'sass:map';
+@use 'tokens' as t;
+
+@function -token($map, $key, $group) {
+  @if not map.has-key($map, $key) {
+    @error 'Unknown #{$group} token `#{$key}`.';
+  }
+  @return map.get($map, $key);
+}
+
+@function color($key) {
+  @return -token(t.$colors, $key, 'color');
+}
+@function spacing($key) {
+  @return -token(t.$spacing, $key, 'spacing');
+}
+@function radius($key) {
+  @return -token(t.$radii, $key, 'radius');
+}
+@function font-size($key) {
+  @return -token(t.$font-sizes, $key, 'font-size');
+}
+@function font($key) {
+  @return -token(t.$font-families, $key, 'font');
+}
+@function border-width($key) {
+  @return -token(t.$border-widths, $key, 'border-width');
+}
+@function size($key) {
+  @return -token(t.$sizes, $key, 'size');
+}
+@function duration($key) {
+  @return -token(t.$durations, $key, 'duration');
+}
+@function z($key) {
+  @return -token(t.$z-layers, $key, 'z');
+}
+@function breakpoint($key) {
+  @return -token(t.$breakpoints, $key, 'breakpoint');
+}
