@@ -26,7 +26,7 @@ $colors: (
   hazard: #b46bff,
   overlay: rgba(7, 6, 15, 0.78),
   scrim: rgba(7, 6, 15, 0.55),
-  white: #ffffff,
+  'white': #ffffff, // quoted: a bare `white` is a colour value, not a key name
 );
 
 $spacing: (

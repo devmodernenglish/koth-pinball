@@ -295,7 +295,7 @@ onBeforeUnmount(() => {
     padding: spacing(sm) spacing(lg);
     border-radius: radius(pill);
     background: color(danger);
-    color: color(white);
+    color: color('white');
     font-weight: 800;
     text-align: center;
   }
